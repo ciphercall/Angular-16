@@ -37,6 +37,7 @@ export class LoginComponent {
       // Login successful
       console.log("Login successful!");
       this.onLoginSuccess();
+      this.authService.setLoginStatus(true);
     } else {
       // Login failed
       console.log("Login failed!");
