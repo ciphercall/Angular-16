@@ -6,6 +6,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import credentials from '../../assets/credentials.json';
+import { AuthService } from '../auth.service';
+
 
 interface Credential {
   usr: string;
@@ -24,6 +26,8 @@ export class LoginComponent {
   username!: string;
   password!: string;
 
+  constructor(private authService: AuthService) {}
+
   login() {
     const user = this.credentials.find(
       credential =>
@@ -32,9 +36,13 @@ export class LoginComponent {
     if (user) {
       // Login successful
       console.log("Login successful!");
+      this.onLoginSuccess();
     } else {
       // Login failed
       console.log("Login failed!");
     }
+  }
+  onLoginSuccess() {
+    this.authService.isLoggedIn.next(true);
   }
 }
