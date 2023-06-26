@@ -364,6 +364,7 @@
     <button mat-button routerLink="about" *ngIf="(authService.isLoggedIn | async)">About</button>
     <button mat-button routerLink="table" *ngIf="(authService.isLoggedIn | async)">Table</button>
     <button mat-button routerLink="login" *ngIf="!(authService.isLoggedIn | async)">Login</button>
+    <button mat-button routerLink="line-graph" *ngIf="(authService.isLoggedIn | async)">Line Graph</button>
   </div>
 
   <!-- This is the navigation link section -->

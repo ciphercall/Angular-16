@@ -11,12 +11,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
+import { LineGraphComponent } from './line-graph/line-graph.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    AboutComponent
+    AboutComponent,
+    LineGraphComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +28,8 @@ import { LoginComponent } from './login/login.component';
     MatButtonModule,
     MatTableModule,
     HttpClientModule,
-    LoginComponent
+    LoginComponent,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
