@@ -360,9 +360,9 @@
 
 <div class="content" role="main">
   <div class="row">
-    <button mat-button routerLink="home" [disabled]="!(authService.isLoggedIn | async)">Home</button>
-    <button mat-button routerLink="about" [disabled]="!(authService.isLoggedIn | async)">About</button>
-    <button mat-button routerLink="table" [disabled]="!(authService.isLoggedIn | async)">Table</button>
+    <button mat-button routerLink="home" *ngIf="(authService.isLoggedIn | async)">Home</button>
+    <button mat-button routerLink="about" *ngIf="(authService.isLoggedIn | async)">About</button>
+    <button mat-button routerLink="table" *ngIf="(authService.isLoggedIn | async)">Table</button>
     <button mat-button routerLink="login" *ngIf="!(authService.isLoggedIn | async)">Login</button>
   </div>
 
