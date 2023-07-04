@@ -1,0 +1,7 @@
+.mat-mdc-button:not(:disabled) {
+  color: lightgrey;
+}
+
+.mat-mdc-button:not(:disabled):hover {
+  color: red;
+}

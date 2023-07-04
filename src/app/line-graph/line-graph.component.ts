@@ -23,7 +23,7 @@ export class LineGraphComponent implements OnInit {
         datasets: [
           {
             label: 'Data',
-            data: [10, 20, 30, 40, 50, 60],
+            data: [10, 20, 0, 40, 70, 60],
             fill: false,
             borderColor: '#4bc0c0'
           }
