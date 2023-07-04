@@ -314,12 +314,15 @@
   <span>Welcome</span>
   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
   <div class="row">
-    <button mat-button routerLink="home" *ngIf="authService.isLoggedIn | async">
+    <button mat-button routerLink="home"
+    routerLinkActive="active-link"
+    *ngIf="authService.isLoggedIn | async">
       Home
     </button>
     <button
       mat-button
       routerLink="about"
+      routerLinkActive="active-link"
       *ngIf="authService.isLoggedIn | async"
     >
       About
@@ -327,6 +330,7 @@
     <button
       mat-button
       routerLink="table"
+      routerLinkActive="active-link"
       *ngIf="authService.isLoggedIn | async"
     >
       Table
@@ -334,6 +338,7 @@
     <button
       mat-button
       routerLink="login"
+      routerLinkActive="active-link"
       *ngIf="!(authService.isLoggedIn | async)"
     >
       Login
@@ -341,6 +346,7 @@
     <button
       mat-button
       routerLink="line-graph"
+      routerLinkActive="active-link"
       *ngIf="authService.isLoggedIn | async"
     >
       Line Graph
