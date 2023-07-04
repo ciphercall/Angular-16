@@ -1,3 +1,14 @@
+<div style="display: flex; align-items: center;">
+  <mat-label style="margin-right: 8px;">Choose a table to generate a line graph:</mat-label>
+  <mat-form-field appearance="fill">
+    <mat-select>
+      <mat-option value="one">Table-One</mat-option>
+      <mat-option value="two">Table-Two</mat-option>
+      <mat-option value="three">Table-Three</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
 <canvas id="lineChart"></canvas>
 <table mat-table [dataSource]="tableData" class="mat-elevation-z8">
   <ng-container matColumnDef="month">
@@ -13,4 +24,3 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-

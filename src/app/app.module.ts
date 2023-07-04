@@ -12,6 +12,8 @@ import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { LineGraphComponent } from './line-graph/line-graph.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { LineGraphComponent } from './line-graph/line-graph.component';
     MatTableModule,
     HttpClientModule,
     LoginComponent,
-    
+    MatSelectModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]
