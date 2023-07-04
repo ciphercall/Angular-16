@@ -28,5 +28,5 @@
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.id]="'row-' + row.position"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.id]="'row-' + row.position" class="short-row"></tr>
 </table>

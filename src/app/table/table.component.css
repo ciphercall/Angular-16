@@ -3,3 +3,6 @@ table {
   padding: auto;
   margin: 20px 20px 20px 20px;
 }
+.short-row {
+  height: 30px !important;
+}

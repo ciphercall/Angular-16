@@ -2,3 +2,6 @@
   width: 600px;
   height: 400px;
 }
+.short-row {
+  height: 30px !important;
+}
