@@ -351,6 +351,14 @@
     >
       Line Graph
     </button>
+    <button
+    mat-button
+    routerLink="db-connector"
+    routerLinkActive="active-link"
+    *ngIf="authService.isLoggedIn | async"
+  >
+    DB Connector
+  </button>
   </div>
 
   <div class="spacer"></div>

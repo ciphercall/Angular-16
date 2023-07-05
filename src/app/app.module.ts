@@ -14,13 +14,18 @@ import { LoginComponent } from './login/login.component';
 import { LineGraphComponent } from './line-graph/line-graph.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { DBConnectorComponent } from './dbconnector/dbconnector.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     AboutComponent,
-    LineGraphComponent
+    LineGraphComponent,
+    DBConnectorComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     HttpClientModule,
     LoginComponent,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
