@@ -6,14 +6,14 @@
   <div class="row">
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Enter your server location</mat-label>
-      <input matInput type="text" placeholder="Server Address" />
+      <input matInput type="text" placeholder="Server Address" #serverLocationInput/>
     </mat-form-field>
   </div>
 
   <div class="row">
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Enter the Database Name</mat-label>
-      <input matInput type="text" placeholder="Database Name" />
+      <input matInput type="text" placeholder="Database Name" (focus)="displayServerLocation(serverLocationInput.value)"/>
     </mat-form-field>
   </div>
 

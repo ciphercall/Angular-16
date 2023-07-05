@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./dbconnector.component.css']
 })
 export class DBConnectorComponent {
-
+  displayServerLocation(serverLocation: string) {
+    console.log('Server location:', serverLocation);
+  }
 }
