@@ -8,12 +8,16 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DBConnectorComponent {
   databaseNames: string[] = [];
+  tableNames: string[] = [];
 
   constructor(private http: HttpClient) {}
 
   async displayServerLocation(serverLocation: string) {
+    if (!serverLocation) {
+      return;
+    }
+
     try {
-      console.log('clicked!');
       const result = await this.http.get<string[]>(`http://localhost:3000/database-names?serverLocation=${serverLocation}`).toPromise();
       if (result) {
         this.databaseNames = result;
@@ -23,4 +27,15 @@ export class DBConnectorComponent {
     }
   }
 
+
+  async displayTableNames(serverLocation: string, databaseName: string) {
+    try {
+      const result = await this.http.get<string[]>(`http://localhost:3000/table-names?serverLocation=${serverLocation}&databaseName=${databaseName}`).toPromise();
+      if (result) {
+        this.tableNames = result;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
