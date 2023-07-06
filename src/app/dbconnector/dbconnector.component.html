@@ -6,14 +6,27 @@
   <div class="row">
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Enter your server location</mat-label>
-      <input matInput type="text" placeholder="Server Address" #serverLocationInput/>
+      <input
+        matInput
+        type="text"
+        placeholder="Server Address"
+        #serverLocationInput
+      />
     </mat-form-field>
   </div>
 
   <div class="row">
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Enter the Database Name</mat-label>
-      <input matInput type="text" placeholder="Database Name" (focus)="displayServerLocation(serverLocationInput.value)"/>
+      <mat-label>Choose a Database</mat-label>
+      <mat-select
+        (click)="displayServerLocation(serverLocationInput.value)"
+      >
+        <mat-option
+          *ngFor="let databaseName of databaseNames"
+          [value]="databaseName"
+          >{{ databaseName }}</mat-option
+        >
+      </mat-select>
     </mat-form-field>
   </div>
 

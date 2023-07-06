@@ -4,6 +4,12 @@ const sql = require('mssql');
 
 const app = express();
 
+// Add middleware to set the Access-Control-Allow-Origin header
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.get('/database-names', async (req, res) => {
   const serverLocation = req.query.serverLocation;
 
@@ -12,11 +18,17 @@ app.get('/database-names', async (req, res) => {
     const config = {
       user: "sa",
       password: "sa@123",
+      database: "",
       server: serverLocation,
-      options: {
-        encrypt: true,
-        enableArithAbort: true,
+      pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000
       },
+      options: {
+        encrypt: false, // for azure
+        trustServerCertificate: true // change to true for local dev / self-signed certs
+      }
     };
 
     // Connect to the SQL server
