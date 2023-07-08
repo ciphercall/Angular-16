@@ -32,6 +32,10 @@ export class DBConnectorComponent {
   }
 
   async displayTableNames(serverLocation: string, databaseName: string) {
+    // Reset the checked columns and column names
+    this.resetCheckedColumns();
+    this.columnNames = [];
+
     try {
       const result = await this.http.get<string[]>(`http://localhost:3000/table-names?serverLocation=${serverLocation}&databaseName=${databaseName}`).toPromise();
       if (result) {
@@ -63,5 +67,9 @@ export class DBConnectorComponent {
 
     // Navigate to the table page and pass the selected column names as route data
     this.router.navigate(['/table-page'], { state: { selectedColumns } });
+  }
+
+  resetCheckedColumns() {
+    this.checkedColumns = {};
   }
 }
