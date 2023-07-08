@@ -1,5 +1,7 @@
+// In dbconnector.component.ts
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dbconnector',
@@ -10,8 +12,9 @@ export class DBConnectorComponent {
   databaseNames: string[] = [];
   tableNames: string[] = [];
   columnNames: string[] = [];
+  checkedColumns: { [key: string]: boolean } = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   async displayServerLocation(serverLocation: string) {
     if (!serverLocation) {
@@ -48,5 +51,17 @@ export class DBConnectorComponent {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  isSubmitButtonDisabled() {
+    return !Object.values(this.checkedColumns).some((checked) => checked);
+  }
+
+  onSubmit() {
+    // Get the selected column names
+    const selectedColumns = Object.keys(this.checkedColumns).filter((columnName) => this.checkedColumns[columnName]);
+
+    // Navigate to the table page and pass the selected column names as route data
+    this.router.navigate(['/table-page'], { state: { selectedColumns } });
   }
 }
