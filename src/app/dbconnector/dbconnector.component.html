@@ -30,7 +30,7 @@
   <div class="row">
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Choose Your Table</mat-label>
-      <mat-select>
+      <mat-select #tableSelect (selectionChange)="displayColumnNames(serverLocationInput.value, databaseSelect.value, tableSelect.value)">
         <mat-option *ngFor="let tableName of tableNames" [value]="tableName">{{tableName}}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -40,13 +40,8 @@
     <h3>Choose Your Table's Fields</h3>
   </div>
   <div class="row">
-    <div>
-      <mat-checkbox>Option 1</mat-checkbox>
-      <mat-checkbox>Option 2</mat-checkbox>
-      <mat-checkbox>Option 3</mat-checkbox>
-      <mat-checkbox>Option 4</mat-checkbox>
-      <mat-checkbox>Option 5</mat-checkbox>
-      <mat-checkbox>Option 6</mat-checkbox>
+    <div *ngFor="let columnName of columnNames">
+      <mat-checkbox>{{ columnName }}</mat-checkbox>
     </div>
   </div>
 </form>
