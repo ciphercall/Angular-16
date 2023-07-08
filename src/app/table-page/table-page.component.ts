@@ -1,12 +1,12 @@
-// In table-page.component.ts
 import { Component, Input, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 interface Card {
   id: number;
   title: string;
   selectedColumns: string[];
   query: string;
-  serverLocation: string; // Add a new property to store the server location
+  serverLocation: string;
 }
 
 @Component({
@@ -19,6 +19,11 @@ export class TablePageComponent implements OnInit {
 
   cards: Card[] = [];
   nextCardId = 0;
+
+  // Add a new property to store the query results
+  queryResults: any[] = [];
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     // Load the cards from local storage
@@ -42,13 +47,15 @@ export class TablePageComponent implements OnInit {
     const columns = selectedColumns.join(', ');
     const query = `SELECT ${columns} FROM ${databaseName}.dbo.${tableName}`;
 
+    console.log("this is query checker: "+query);
+
     // Create a new card object
     const card: Card = {
       id: this.nextCardId++,
       title: `${tableName}`,
       selectedColumns,
       query,
-      serverLocation, // Save the server location to the card object
+      serverLocation,
     };
 
     // Add the card to the cards array
@@ -73,6 +80,11 @@ export class TablePageComponent implements OnInit {
   }
 
   onCardClick(card: Card) {
-    console.log(card);
+    // Send a request to the Node.js server with the card's query and serverLocation as query parameters
+    this.http.get(`http://localhost:3000/query-results?query=${card.query}&serverLocation=${card.serverLocation}`).subscribe((results) => {
+      // Store the results in the queryResults property
+      this.queryResults = results as any[];
+      console.log("this is the query results: "+JSON.stringify(this.queryResults));
+    });
   }
 }

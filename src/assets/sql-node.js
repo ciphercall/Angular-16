@@ -25,8 +25,8 @@ app.get('/database-names', async (req, res) => {
         idleTimeoutMillis: 30000
       },
       options: {
-        encrypt: false, // for azure
-        trustServerCertificate: true // change to true for local dev / self-signed certs
+        encrypt: false,
+        trustServerCertificate: true
       }
     };
 
@@ -61,8 +61,8 @@ app.get('/table-names', async (req, res) => {
         idleTimeoutMillis: 30000
       },
       options: {
-        encrypt: false, // for azure
-        trustServerCertificate: true // change to true for local dev / self-signed certs
+        encrypt: false,
+        trustServerCertificate: true
       }
     };
 
@@ -108,14 +108,49 @@ app.get('/column-names', async (req, res) => {
 
     // Query the column names
     const result = await sql.query(`SELECT COLUMN_NAME FROM [${databaseName}].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'`);
-    // console.log('this is the table name: '+tableName);
-    // console.log('this is the query: '+`SELECT COLUMN_NAME FROM [${databaseName}].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'`);
-    // console.log('this is total result: '+JSON.stringify(result));
+
     // Return the column names
     res.json(result.recordset.map((row) => row.COLUMN_NAME));
   } catch (err) {
     console.error(err);
     res.status(500).send('An error occurred while retrieving the column names.');
+  }
+});
+
+// Add a new endpoint for querying the results
+app.get('/query-results', async (req, res) => {
+  const serverLocation = req.query.serverLocation;
+  const query = req.query.query;
+
+  try {
+    // Configure the connection to the SQL server
+    const config = {
+      user: "sa",
+      password: "sa@123",
+      database: "",
+      server: serverLocation,
+      pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000
+      },
+      options: {
+        encrypt: false,
+        trustServerCertificate: true
+      }
+    };
+
+    // Connect to the SQL server
+    await sql.connect(config);
+
+    // Execute the query
+    const result = await sql.query(query);
+
+    // Return the results
+    res.json(result.recordset);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while executing the query.');
   }
 });
 
