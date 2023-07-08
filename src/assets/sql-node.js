@@ -108,9 +108,9 @@ app.get('/column-names', async (req, res) => {
 
     // Query the column names
     const result = await sql.query(`SELECT COLUMN_NAME FROM [${databaseName}].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'`);
-    console.log('this is the table name: '+tableName);
-    console.log('this is the query: '+`SELECT COLUMN_NAME FROM [${databaseName}].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'`);
-    console.log('this is total result: '+JSON.stringify(result));
+    // console.log('this is the table name: '+tableName);
+    // console.log('this is the query: '+`SELECT COLUMN_NAME FROM [${databaseName}].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'`);
+    // console.log('this is total result: '+JSON.stringify(result));
     // Return the column names
     res.json(result.recordset.map((row) => row.COLUMN_NAME));
   } catch (err) {
