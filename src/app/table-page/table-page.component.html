@@ -1,0 +1,15 @@
+<!-- In table-page.component.html -->
+<div class="cards-container">
+  <mat-card *ngFor="let card of cards" (click)="onCardClick(card)">
+    <mat-card-header>
+      <mat-card-title>{{ card.title }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Display the card's selected columns -->
+      <!-- <p>Selected columns:</p> -->
+      <ul>
+        <li *ngFor="let column of card.selectedColumns">{{ column }}</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -18,6 +18,9 @@ import { DBConnectorComponent } from './dbconnector/dbconnector.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { TablePageComponent } from './table-page/table-page.component';
+import { MatCardModule } from '@angular/material/card';
+
 
 @NgModule({
   declarations: [
@@ -25,7 +28,8 @@ import { FormsModule } from '@angular/forms';
     HomeComponent,
     AboutComponent,
     LineGraphComponent,
-    DBConnectorComponent
+    DBConnectorComponent,
+    TablePageComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,8 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatCheckboxModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

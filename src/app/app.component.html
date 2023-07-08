@@ -352,6 +352,14 @@
       Line Graph
     </button>
     <button
+      mat-button
+      routerLink="table-page"
+      routerLinkActive="active-link"
+      *ngIf="authService.isLoggedIn | async"
+    >
+      Table Page
+    </button>
+    <button
     mat-button
     routerLink="db-connector"
     routerLinkActive="active-link"
