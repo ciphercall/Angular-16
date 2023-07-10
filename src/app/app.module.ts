@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { TablePageComponent } from './table-page/table-page.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -47,7 +47,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatInputModule,
     FormsModule,
     MatCardModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

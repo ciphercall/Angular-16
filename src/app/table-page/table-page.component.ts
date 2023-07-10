@@ -103,4 +103,15 @@ export class TablePageComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  deleteCard(card: Card, event: Event) {
+    // Stop event propagation
+    event.stopPropagation();
+
+    // Remove the card from the cards array
+    this.cards = this.cards.filter((c) => c.id !== card.id);
+
+    // Save the updated cards array to local storage
+    this.saveCards();
+  }
 }

@@ -83,7 +83,10 @@ app.get('/table-names', async (req, res) => {
 app.get('/column-names', async (req, res) => {
   const serverLocation = req.query.serverLocation;
   const databaseName = req.query.databaseName;
-  const tableName = req.query.tableName;
+  let tableName = req.query.tableName;
+
+  // Escape single quotes in the table name
+  tableName = tableName.replace(/'/g, "''");
 
   try {
     // Configure the connection to the SQL server
