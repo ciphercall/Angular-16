@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TablePageComponent } from './table-page/table-page.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { MatCardModule } from '@angular/material/card';
     MatCheckboxModule,
     MatInputModule,
     FormsModule,
-    MatCardModule
+    MatCardModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
