@@ -39,4 +39,20 @@
 
   <!-- Add a paginator -->
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+<!-- Add a form for entering the page range -->
+<form *ngIf="paginator">
+<mat-form-field>
+<mat-label>From Page</mat-label>
+<input matInput type="number" [(ngModel)]="pageRange[0]" name="fromPage" min="1" [max]="paginator.getNumberOfPages()">
+</mat-form-field>
+<mat-form-field>
+<mat-label>To Page</mat-label>
+<input matInput type="number" [(ngModel)]="pageRange[1]" name="toPage" [min]="pageRange[0]" [max]="paginator.getNumberOfPages()">
+</mat-form-field>
+</form>
+
+<!-- Add a print button -->
+<button mat-raised-button color="primary" (click)="print()">Print</button>
+
 </ng-container>

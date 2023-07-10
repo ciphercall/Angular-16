@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Renderer2, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -31,7 +31,10 @@ export class TablePageComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<any>();
 
-  constructor(private http: HttpClient) {}
+  // Add a new property for storing the page range
+  pageRange: [number, number] = [1, 1];
+
+  constructor(private http: HttpClient, private renderer: Renderer2, private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     // Load the cards from local storage
@@ -50,7 +53,61 @@ export class TablePageComponent implements OnInit {
     }
   }
 
-  createCard(selectedColumns: string[], tableName: string, databaseName: string, serverLocation: string) {
+print() {
+   // Get start and end indices of rows to print.
+   const pageSize = this.paginator.pageSize;
+   const startIndex = (this.pageRange[0] -1) * pageSize;
+   const endIndex = this.pageRange[1] * pageSize;
+
+   // Filter data source to only include rows on specified pages.
+   const dataToPrint = this.dataSource.data.slice(startIndex,endIndex);
+
+   // Create a new window.
+   const printWindow = this.renderer.createElement('iframe');
+   this.renderer.setStyle(printWindow,'position','fixed');
+   this.renderer.setStyle(printWindow,'top','-100%');
+   this.renderer.appendChild(document.body,printWindow);
+
+   // Write table's HTML to new window's document.
+   const tableHtml = this.generateTableHtml(dataToPrint);
+   printWindow.contentDocument!.open();
+   printWindow.contentDocument!.write(tableHtml);
+   printWindow.contentDocument!.close();
+
+   // Open print dialog.
+   printWindow.contentWindow!.focus();
+   printWindow.contentWindow!.print();
+
+   // Remove new window.
+   this.renderer.removeChild(document.body,printWindow);
+}
+
+generateTableHtml(data: any[]) {
+  let html = '<table>';
+
+  // Add table header
+  html += '<thead><tr>';
+  for (const column of this.selectedCard!.selectedColumns) {
+    html += `<th>${column}</th>`;
+  }
+  html += '</tr></thead>';
+
+  // Add table body
+  html += '<tbody>';
+  for (const row of data) {
+    html += '<tr>';
+    for (const column of this.selectedCard!.selectedColumns) {
+      html += `<td>${row[column]}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody>';
+
+  html += '</table>';
+  return html;
+}
+
+createCard(selectedColumns: string[], tableName: string, databaseName: string, serverLocation: string) {
     // Generate the query
     const columns = selectedColumns.join(', ');
     const query = `SELECT ${columns} FROM ${databaseName}.dbo.${tableName}`;
@@ -96,6 +153,9 @@ export class TablePageComponent implements OnInit {
       // Set the dataSource's paginator and sort
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      // Manually trigger change detection
+      this.changeDetectorRef.detectChanges();
     });
   }
 
