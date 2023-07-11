@@ -1,3 +1,4 @@
+<!-- table-page.component.html -->
 <div class="cards-container">
   <mat-card *ngFor="let card of cards" (click)="onCardClick(card)">
     <mat-card-header>
@@ -15,44 +16,3 @@
     </mat-card-content>
   </mat-card>
 </div>
-
-<!-- Add a new section for displaying the query results -->
-<ng-container *ngIf="selectedCard">
-  <h2>Query Results</h2>
-
-  <!-- Add a search input -->
-  <mat-form-field>
-    <mat-label>Search</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Search">
-  </mat-form-field>
-
-  <table mat-table [dataSource]="dataSource" matSort>
-    <!-- Generate columns dynamically based on the selected card's selectedColumns -->
-    <ng-container *ngFor="let column of selectedCard.selectedColumns" [matColumnDef]="column">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column }}</th>
-      <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="selectedCard.selectedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: selectedCard.selectedColumns;"></tr>
-  </table>
-
-  <!-- Add a paginator -->
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
-<!-- Add a form for entering the page range -->
-<form *ngIf="paginator">
-<mat-form-field>
-<mat-label>From Page</mat-label>
-<input matInput type="number" [(ngModel)]="pageRange[0]" name="fromPage" min="1" [max]="paginator.getNumberOfPages()">
-</mat-form-field>
-<mat-form-field>
-<mat-label>To Page</mat-label>
-<input matInput type="number" [(ngModel)]="pageRange[1]" name="toPage" [min]="pageRange[0]" [max]="paginator.getNumberOfPages()">
-</mat-form-field>
-</form>
-
-<!-- Add a print button -->
-<button mat-raised-button color="primary" (click)="print()">Print</button>
-
-</ng-container>

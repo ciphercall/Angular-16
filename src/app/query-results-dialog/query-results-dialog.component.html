@@ -1,0 +1,51 @@
+<h2 style="text-align: center;">Query Results</h2>
+
+<!-- Add a search input -->
+<mat-form-field>
+  <mat-label>Search</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Search" />
+</mat-form-field>
+
+<!-- Add inputs for selecting the page range -->
+<mat-form-field>
+  <mat-label>Start Page</mat-label>
+  <input matInput [(ngModel)]="pageRange[0]" type="number" min="1" [max]="paginator.getNumberOfPages()" />
+</mat-form-field>
+<mat-form-field>
+  <mat-label>End Page</mat-label>
+  <input matInput [(ngModel)]="pageRange[1]" type="number" [min]="pageRange[0]" [max]="paginator.getNumberOfPages()" />
+</mat-form-field>
+
+<!-- Add a print button -->
+<div style="text-align: center;">
+  <button
+    mat-raised-button
+    (click)="print()"
+  >
+    Print
+  </button>
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort>
+  <!-- Generate columns dynamically based on the selected card's selectedColumns -->
+  <ng-container
+    *ngFor="let column of data.card.selectedColumns"
+    [matColumnDef]="column"
+  >
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column }}</th>
+    <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="data.card.selectedColumns"></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: data.card.selectedColumns"
+  ></tr>
+</table>
+
+<!-- Add a paginator -->
+<mat-paginator
+  #paginator
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+></mat-paginator>

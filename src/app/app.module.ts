@@ -22,6 +22,8 @@ import { TablePageComponent } from './table-page/table-page.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
+import { QueryResultsDialogComponent } from './query-results-dialog/query-results-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { MatIconModule } from '@angular/material/icon';
     AboutComponent,
     LineGraphComponent,
     DBConnectorComponent,
-    TablePageComponent
+    TablePageComponent,
+    QueryResultsDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import { MatIconModule } from '@angular/material/icon';
     FormsModule,
     MatCardModule,
     MatPaginatorModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
