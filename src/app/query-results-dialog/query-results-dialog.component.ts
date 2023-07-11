@@ -13,11 +13,12 @@ interface Card {
   serverLocation: string;
 }
 
-
 @Component({
   selector: 'app-query-results-dialog',
-  templateUrl: './query-results-dialog.component.html'
+  templateUrl: './query-results-dialog.component.html',
+  styleUrls: ['./query-results-dialog.component.css']
 })
+
 export class QueryResultsDialogComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -33,6 +34,12 @@ export class QueryResultsDialogComponent implements OnInit {
   ngOnInit() {
     // Load the query results
     this.loadQueryResults();
+    const rows = document.querySelectorAll('.mat-row');
+    rows.forEach((row, index) => {
+      if (index % 2 === 1) {
+        (row as HTMLElement).style.backgroundColor = '#f5f5f5';
+      }
+    });
   }
 
   loadQueryResults() {
@@ -70,7 +77,7 @@ export class QueryResultsDialogComponent implements OnInit {
     const endIndex = this.pageRange[1] * pageSize;
 
     // Filter data source to only include rows on specified pages.
-    const dataToPrint = this.dataSource.data.slice(startIndex, endIndex);
+    const dataToPrint = this.dataSource.filteredData.slice(startIndex, endIndex);
 
     // Create a new window.
     const printWindow = this.renderer.createElement('iframe');
@@ -116,12 +123,4 @@ export class QueryResultsDialogComponent implements OnInit {
     html += '</table>';
     return html;
   }
-  // onMouseOver(event: MouseEvent) {
-  //   (event.target as HTMLButtonElement).style.backgroundColor = 'green';
-  // }
-
-  // onMouseOut(event: MouseEvent) {
-  //   (event.target as HTMLButtonElement).style.backgroundColor = 'cyan';
-  // }
-
 }
