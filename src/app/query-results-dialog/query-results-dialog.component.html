@@ -70,3 +70,17 @@
 <mat-dialog-actions>
   <!-- Add your dialog actions here -->
 </mat-dialog-actions>
+<!-- Add an element to display the current page number -->
+<div
+  style="
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    background-color: lightgrey;
+    border-radius: 5px;
+    font-weight: bold;
+  "
+>
+  Page: {{ paginator.pageIndex + 1 }}
+</div>
