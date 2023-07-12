@@ -20,3 +20,8 @@
   align-items: center;
   z-index: 1000; /* Increase z-index */
 }
+/* Add a hover effect to the print button */
+button:hover {
+  box-shadow: 0 0 10px green;
+  background-color: greenyellow;
+}
