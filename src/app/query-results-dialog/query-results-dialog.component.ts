@@ -27,7 +27,7 @@ export class QueryResultsDialogComponent implements OnInit {
 
   // Add new properties for pagination
   currentPage = 0;
-  pageSize = 200;
+  pageSize = 30000;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { card: Card },
