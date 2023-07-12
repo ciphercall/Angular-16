@@ -120,10 +120,12 @@ app.get('/column-names', async (req, res) => {
   }
 });
 
-// Add a new endpoint for querying the results
+// Add a new endpoint for querying the results with pagination support
 app.get('/query-results', async (req, res) => {
   const serverLocation = req.query.serverLocation;
   const query = req.query.query;
+  const currentPage = parseInt(req.query.currentPage);
+  const pageSize = parseInt(req.query.pageSize);
 
   try {
     // Configure the connection to the SQL server
@@ -146,8 +148,21 @@ app.get('/query-results', async (req, res) => {
     // Connect to the SQL server
     await sql.connect(config);
 
-    // Execute the query
-    const result = await sql.query(query);
+    // Calculate the start and end row numbers for the current page
+    const startRow = currentPage * pageSize + 1;
+    const endRow = startRow + pageSize - 1;
+
+    // Execute the query with pagination using ROW_NUMBER
+    const paginatedQuery = `
+      WITH OrderedResults AS (
+        SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS RowNumber, *
+        FROM (${query}) AS QueryResults
+      )
+      SELECT *
+      FROM OrderedResults
+      WHERE RowNumber BETWEEN ${startRow} AND ${endRow}
+    `;
+    const result = await sql.query(paginatedQuery);
 
     // Return the results
     res.json(result.recordset);

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -18,21 +18,24 @@ interface Card {
   templateUrl: './query-results-dialog.component.html',
   styleUrls: ['./query-results-dialog.component.css']
 })
-
 export class QueryResultsDialogComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<any>();
   pageRange: [number, number] = [1, 1];
   isLoading = false;
+
+  // Add new properties for pagination
+  currentPage = 0;
+  pageSize = 200;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { card: Card },
-    private http: HttpClient,
-    private renderer: Renderer2
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
-    // Load the query results
+    // Load the first chunk of query results
     this.loadQueryResults();
     const rows = document.querySelectorAll('.mat-row');
     rows.forEach((row, index) => {
@@ -55,17 +58,23 @@ export class QueryResultsDialogComponent implements OnInit {
         params: {
           query,
           serverLocation,
+          // Add new parameters for pagination
+          currentPage: this.currentPage.toString(),
+          pageSize: this.pageSize.toString(),
         },
       })
       .subscribe((data) => {
         // Update the data source with the query results
-        this.dataSource.data = data;
+        this.dataSource.data = [...this.dataSource.data, ...data];
 
         // Set the paginator and sort on the data source
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         // Set isLoading to false when data has finished loading
         this.isLoading = false;
+
+        // Increment the current page
+        this.currentPage++;
       });
   }
 
@@ -84,35 +93,25 @@ export class QueryResultsDialogComponent implements OnInit {
     const dataToPrint = this.dataSource.filteredData.slice(startIndex, endIndex);
 
     // Create a new window.
-    const printWindow = this.renderer.createElement('iframe');
-    this.renderer.setStyle(printWindow, 'position', 'fixed');
-    this.renderer.setStyle(printWindow, 'top', '-100%');
-    this.renderer.appendChild(document.body, printWindow);
+    const printWindow = window.open('', '_blank');
 
     // Write table's HTML to new window's document.
     const tableHtml = this.generateTableHtml(dataToPrint);
-    printWindow.contentDocument!.open();
-
-    // Add Bootstrap CSS file
-    const bootstrapCss = '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">';
-    printWindow.contentDocument!.write(bootstrapCss);
-
-    printWindow.contentDocument!.write(tableHtml);
-    printWindow.contentDocument!.close();
+    printWindow!.document.write(tableHtml);
 
     // Open print dialog.
-    printWindow.contentWindow!.focus();
-    printWindow.contentWindow!.print();
+    printWindow!.focus();
+    printWindow!.print();
 
-    // Remove new window.
-    this.renderer.removeChild(document.body, printWindow);
+    // Close new window.
+    printWindow!.close();
   }
 
   generateTableHtml(data: any[]) {
-    let html = '<table class="table">';
+    let html = '<table>';
 
     // Add table header
-    html += '<thead class="thead-dark"><tr>';
+    html += '<thead><tr>';
     for (const column of this.data.card.selectedColumns) {
       html += `<th>${column}</th>`;
     }
@@ -132,4 +131,25 @@ export class QueryResultsDialogComponent implements OnInit {
     html += '</table>';
     return html;
   }
+  ngAfterViewInit() {
+    // Add a scroll event listener to the mat-dialog-content element
+    const dialogContentElement = document.querySelector('mat-dialog-content');
+    if (dialogContentElement) {
+      // Cast the dialogContentElement to an HTMLElement
+      const dialogContentHTMLElement = dialogContentElement as HTMLElement;
+
+      // Make the mat-dialog-content element scrollable
+      dialogContentHTMLElement.style.height = '400px';
+      dialogContentHTMLElement.style.overflow = 'auto';
+
+      dialogContentHTMLElement.addEventListener('scroll', () => {
+        // Check if the user has scrolled to the bottom of the mat-dialog-content element
+        if (dialogContentHTMLElement.scrollTop + dialogContentHTMLElement.clientHeight >= dialogContentHTMLElement.scrollHeight) {
+          // Load the next chunk of data
+          this.loadQueryResults();
+        }
+      });
+    }
+  }
+
 }
