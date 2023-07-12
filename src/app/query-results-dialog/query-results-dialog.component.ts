@@ -24,7 +24,7 @@ export class QueryResultsDialogComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<any>();
   pageRange: [number, number] = [1, 1];
-
+  isLoading = false;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { card: Card },
     private http: HttpClient,
@@ -43,6 +43,8 @@ export class QueryResultsDialogComponent implements OnInit {
   }
 
   loadQueryResults() {
+    // Set isLoading to true while data is loading
+    this.isLoading = true;
     // Get the query and server location from the selected card
     const query = this.data.card.query;
     const serverLocation = this.data.card.serverLocation;
@@ -62,6 +64,8 @@ export class QueryResultsDialogComponent implements OnInit {
         // Set the paginator and sort on the data source
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        // Set isLoading to false when data has finished loading
+        this.isLoading = false;
       });
   }
 
@@ -88,6 +92,11 @@ export class QueryResultsDialogComponent implements OnInit {
     // Write table's HTML to new window's document.
     const tableHtml = this.generateTableHtml(dataToPrint);
     printWindow.contentDocument!.open();
+
+    // Add Bootstrap CSS file
+    const bootstrapCss = '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">';
+    printWindow.contentDocument!.write(bootstrapCss);
+
     printWindow.contentDocument!.write(tableHtml);
     printWindow.contentDocument!.close();
 
@@ -100,10 +109,10 @@ export class QueryResultsDialogComponent implements OnInit {
   }
 
   generateTableHtml(data: any[]) {
-    let html = '<table>';
+    let html = '<table class="table">';
 
     // Add table header
-    html += '<thead><tr>';
+    html += '<thead class="thead-dark"><tr>';
     for (const column of this.data.card.selectedColumns) {
       html += `<th>${column}</th>`;
     }

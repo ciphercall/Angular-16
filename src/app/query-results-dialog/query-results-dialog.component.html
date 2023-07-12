@@ -1,5 +1,9 @@
 <h2 mat-dialog-title>Query Results</h2>
 <mat-dialog-content>
+  <!-- Show loader while data is loading -->
+  <div *ngIf="isLoading" class="overlay">
+    <mat-spinner></mat-spinner>
+  </div>
   <!-- Add a search input -->
   <mat-form-field>
     <mat-label>Search</mat-label>
