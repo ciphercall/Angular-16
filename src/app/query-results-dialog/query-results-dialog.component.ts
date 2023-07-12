@@ -132,24 +132,15 @@ export class QueryResultsDialogComponent implements OnInit {
     return html;
   }
   ngAfterViewInit() {
-    // Add a scroll event listener to the mat-dialog-content element
-    const dialogContentElement = document.querySelector('mat-dialog-content');
-    if (dialogContentElement) {
-      // Cast the dialogContentElement to an HTMLElement
-      const dialogContentHTMLElement = dialogContentElement as HTMLElement;
-
-      // Make the mat-dialog-content element scrollable
-      dialogContentHTMLElement.style.height = '400px';
-      dialogContentHTMLElement.style.overflow = 'auto';
-
-      dialogContentHTMLElement.addEventListener('scroll', () => {
-        // Check if the user has scrolled to the bottom of the mat-dialog-content element
-        if (dialogContentHTMLElement.scrollTop + dialogContentHTMLElement.clientHeight >= dialogContentHTMLElement.scrollHeight) {
-          // Load the next chunk of data
-          this.loadQueryResults();
-        }
-      });
-    }
+    // Add a page event listener to the paginator
+    this.paginator.page.subscribe(() => {
+      // Check if the user has reached the last page
+      if (this.paginator.pageIndex === this.paginator.getNumberOfPages() - 1) {
+        // Load the next chunk of data
+        this.loadQueryResults();
+      }
+    });
   }
+
 
 }
