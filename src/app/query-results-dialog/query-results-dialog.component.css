@@ -22,6 +22,6 @@
 }
 /* Add a hover effect to the print button */
 button:hover {
-  box-shadow: 0 0 10px green;
-  background-color: greenyellow;
+  box-shadow: 0 0 10px green !important;
+  background-color: greenyellow !important;
 }
