@@ -94,14 +94,24 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
     const startIndex = (this.pageRange[0] - 1) * pageSize;
     const endIndex = this.pageRange[1] * pageSize;
     const dataToPrint = this.dataSource.filteredData.slice(startIndex, endIndex);
-    const printWindow = window.open('', '_blank');
     const tableHtml = this.generateTableHtml(dataToPrint);
-    printWindow!.document.write(`<img src="${this.chartImage}" />`);
-    printWindow!.document.write(tableHtml);
-    printWindow!.focus();
-    printWindow!.print();
-    printWindow!.close();
-  }
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    const iframeDoc = iframe.contentWindow!.document;
+    const img = iframeDoc.createElement('img');
+    img.src = this.chartImage;
+    iframeDoc.body.appendChild(img);
+    const tableDiv = iframeDoc.createElement('div');
+    tableDiv.innerHTML = tableHtml;
+    iframeDoc.body.appendChild(tableDiv);
+    setTimeout(() => {
+        iframe.contentWindow!.focus();
+        iframe.contentWindow!.print();
+        document.body.removeChild(iframe);
+    }, 500);
+}
+
 
   generateTableHtml(data: any[]) {
     let html = '<table>';
