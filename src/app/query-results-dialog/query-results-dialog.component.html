@@ -34,7 +34,11 @@
   <!-- Line chart -->
   <div>
     <label for="x-axis">X Axis:</label>
-    <select id="x-axis" [(ngModel)]="selectedXColumn" (change)="updateChartData()">
+    <select
+      id="x-axis"
+      [(ngModel)]="selectedXColumn"
+      (change)="updateChartData()"
+    >
       <option *ngFor="let column of data.card.selectedColumns" [value]="column">
         {{ column }}
       </option>
@@ -42,7 +46,11 @@
   </div>
   <div>
     <label for="y-axis">Y Axis:</label>
-    <select id="y-axis" [(ngModel)]="selectedYColumn" (change)="updateChartData()">
+    <select
+      id="y-axis"
+      [(ngModel)]="selectedYColumn"
+      (change)="updateChartData()"
+    >
       <option *ngFor="let column of data.card.selectedColumns" [value]="column">
         {{ column }}
       </option>
@@ -67,29 +75,31 @@
     ></tr>
     <tr
       mat-row
-      *matRowDef="
-        let row;
-        columns: data.card.selectedColumns;
-        let i = index
-      "
+      *matRowDef="let row; columns: data.card.selectedColumns; let i = index"
       [ngClass]="{ 'striped-row': i % 2 === 1 }"
     ></tr>
   </table>
 
   <!-- Paginator -->
-  <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator
+    #paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
 </mat-dialog-content>
 
 <mat-dialog-actions></mat-dialog-actions>
 
-<div style="
-     position: absolute;
-     bottom: 0;
-     text-align: center;
-     width: 100%;
-     background-color: #d3d3d3;
-     border-radius: 5px;
-     font-weight: 700;
-   ">
+<div
+  style="
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    background-color: #d3d3d3;
+    border-radius: 5px;
+    font-weight: 700;
+  "
+>
   Page: {{ paginator.pageIndex + 1 }}
 </div>

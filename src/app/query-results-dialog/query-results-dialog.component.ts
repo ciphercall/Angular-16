@@ -1,11 +1,4 @@
-import {
-  Component,
-  Inject,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -31,16 +24,14 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('chart') chartRef!: ElementRef<HTMLCanvasElement>;
   chart!: Chart;
-
   dataSource = new MatTableDataSource<any>();
   pageRange: [number, number] = [1, 1];
   isLoading = false;
   currentPage = 0;
   pageSize = 30000;
-
-  // Properties for the line chart
   selectedXColumn = '';
   selectedYColumn = '';
+  chartImage: string = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { card: Card },
@@ -55,7 +46,6 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
         (row as HTMLElement).style.backgroundColor = '#f5f5f5';
       }
     });
-    // Set the initial values for the selected columns
     this.selectedXColumn = this.data.card.selectedColumns[0];
     this.selectedYColumn = this.data.card.selectedColumns[1];
   }
@@ -89,7 +79,6 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
         this.isLoading = false;
         this.currentPage++;
-        // Update the chart data
         this.updateChartData();
       });
   }
@@ -97,7 +86,6 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    // Update the chart data
     this.updateChartData();
   }
 
@@ -108,6 +96,7 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
     const dataToPrint = this.dataSource.filteredData.slice(startIndex, endIndex);
     const printWindow = window.open('', '_blank');
     const tableHtml = this.generateTableHtml(dataToPrint);
+    printWindow!.document.write(`<img src="${this.chartImage}" />`);
     printWindow!.document.write(tableHtml);
     printWindow!.focus();
     printWindow!.print();
@@ -134,7 +123,6 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
     return html;
   }
 
-  // Method to create the chart
   createChart() {
     const ctx = this.chartRef.nativeElement.getContext('2d');
     if (ctx) {
@@ -151,14 +139,11 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
             },
           ],
         },
-        options: {
-          responsive: true,
-        },
+        options: { responsive: true },
       });
     }
   }
 
-  // Method to update the chart data
   updateChartData() {
     const xColumnData = this.dataSource.filteredData.map(
       (row) => row[this.selectedXColumn]
@@ -170,5 +155,6 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
     this.chart.data.datasets[0].data = yColumnData;
     this.chart.data.datasets[0].label = this.selectedYColumn;
     this.chart.update();
+    this.chartImage = this.chart.toBase64Image();
   }
 }
