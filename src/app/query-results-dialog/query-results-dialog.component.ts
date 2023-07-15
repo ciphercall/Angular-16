@@ -31,7 +31,6 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
   pageSize = 30000;
   selectedXColumn = '';
   selectedYColumn = '';
-  chartImage: string = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { card: Card },
@@ -106,12 +105,11 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
     tableDiv.innerHTML = tableHtml;
     iframeDoc.body.appendChild(tableDiv);
     setTimeout(() => {
-        iframe.contentWindow!.focus();
-        iframe.contentWindow!.print();
-        document.body.removeChild(iframe);
+      iframe.contentWindow!.focus();
+      iframe.contentWindow!.print();
+      document.body.removeChild(iframe);
     }, 500);
-}
-
+  }
 
   generateTableHtml(data: any[]) {
     let html = '<table>';
@@ -165,6 +163,9 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
     this.chart.data.datasets[0].data = yColumnData;
     this.chart.data.datasets[0].label = this.selectedYColumn;
     this.chart.update();
-    this.chartImage = this.chart.toBase64Image();
+  }
+
+  get chartImage(): string {
+    return this.chart.toBase64Image();
   }
 }
