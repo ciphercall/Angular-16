@@ -30,35 +30,25 @@
   <div style="text-align: center; margin-bottom: 10px">
     <button mat-raised-button (click)="print()">Print</button>
   </div>
-
-  <!-- Line chart -->
-  <div>
-    <label for="x-axis">X Axis:</label>
-    <select
-      id="x-axis"
-      [(ngModel)]="selectedXColumn"
-      (change)="updateChartData()"
-    >
-      <option *ngFor="let column of data.card.selectedColumns" [value]="column">
-        {{ column }}
-      </option>
-    </select>
-  </div>
-  <div>
-    <label for="y-axis">Y Axis:</label>
-    <select
-      id="y-axis"
-      [(ngModel)]="selectedYColumn"
-      (change)="updateChartData()"
-    >
-      <option *ngFor="let column of data.card.selectedColumns" [value]="column">
-        {{ column }}
-      </option>
-    </select>
+  <div fxLayout="row">
+    <mat-form-field>
+      <mat-label>X Axis</mat-label>
+      <mat-select [(ngModel)]="selectedXColumn" (selectionChange)="updateChartData()">
+        <mat-option *ngFor="let column of data.card.selectedColumns" [value]="column">
+          {{ column }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Y Axis</mat-label>
+      <mat-select [(ngModel)]="selectedYColumn" (selectionChange)="updateChartData()">
+        <mat-option *ngFor="let column of data.card.selectedColumns" [value]="column">
+          {{ column }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
   <canvas #chart></canvas>
-
-  <!-- Table -->
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container
       *ngFor="let column of data.card.selectedColumns"
@@ -75,21 +65,22 @@
     ></tr>
     <tr
       mat-row
-      *matRowDef="let row; columns: data.card.selectedColumns; let i = index"
+      *matRowDef="
+        let row;
+        columns: data.card.selectedColumns;
+        let i = index
+      "
       [ngClass]="{ 'striped-row': i % 2 === 1 }"
     ></tr>
   </table>
 
-  <!-- Paginator -->
   <mat-paginator
     #paginator
     [pageSizeOptions]="[5, 10, 20]"
     showFirstLastButtons
   ></mat-paginator>
 </mat-dialog-content>
-
 <mat-dialog-actions></mat-dialog-actions>
-
 <div
   style="
     position: absolute;
