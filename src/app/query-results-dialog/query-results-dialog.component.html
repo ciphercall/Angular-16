@@ -1,16 +1,12 @@
 <h2 mat-dialog-title>Query Results</h2>
 <mat-dialog-content>
-  <!-- Show loader while data is loading -->
   <div *ngIf="isLoading" class="overlay">
     <mat-spinner></mat-spinner>
   </div>
-  <!-- Add a search input -->
   <mat-form-field>
     <mat-label>Search</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Search" />
   </mat-form-field>
-
-  <!-- Add inputs for selecting the page range -->
   <mat-form-field>
     <mat-label>Start Page</mat-label>
     <input
@@ -31,14 +27,31 @@
       [max]="paginator.getNumberOfPages()"
     />
   </mat-form-field>
-
-  <!-- Add a print button -->
   <div style="text-align: center; margin-bottom: 10px">
     <button mat-raised-button (click)="print()">Print</button>
   </div>
 
+  <!-- Line chart -->
+  <div>
+    <label for="x-axis">X Axis:</label>
+    <select id="x-axis" [(ngModel)]="selectedXColumn" (change)="updateChartData()">
+      <option *ngFor="let column of data.card.selectedColumns" [value]="column">
+        {{ column }}
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="y-axis">Y Axis:</label>
+    <select id="y-axis" [(ngModel)]="selectedYColumn" (change)="updateChartData()">
+      <option *ngFor="let column of data.card.selectedColumns" [value]="column">
+        {{ column }}
+      </option>
+    </select>
+  </div>
+  <canvas #chart></canvas>
+
+  <!-- Table -->
   <table mat-table [dataSource]="dataSource" matSort>
-    <!-- Generate columns dynamically based on the selected card's selectedColumns -->
     <ng-container
       *ngFor="let column of data.card.selectedColumns"
       [matColumnDef]="column"
@@ -54,33 +67,29 @@
     ></tr>
     <tr
       mat-row
-      *matRowDef="let row; columns: data.card.selectedColumns; let i = index"
+      *matRowDef="
+        let row;
+        columns: data.card.selectedColumns;
+        let i = index
+      "
       [ngClass]="{ 'striped-row': i % 2 === 1 }"
     ></tr>
   </table>
 
-  <!-- Add a paginator -->
-  <mat-paginator
-    #paginator
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-  ></mat-paginator>
+  <!-- Paginator -->
+  <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <!-- Add your dialog actions here -->
-</mat-dialog-actions>
-<!-- Add an element to display the current page number -->
-<div
-  style="
-    position: absolute;
-    bottom: 0;
-    text-align: center;
-    width: 100%;
-    background-color: lightgrey;
-    border-radius: 5px;
-    font-weight: bold;
-  "
->
+<mat-dialog-actions></mat-dialog-actions>
+
+<div style="
+     position: absolute;
+     bottom: 0;
+     text-align: center;
+     width: 100%;
+     background-color: #d3d3d3;
+     border-radius: 5px;
+     font-weight: 700;
+   ">
   Page: {{ paginator.pageIndex + 1 }}
 </div>

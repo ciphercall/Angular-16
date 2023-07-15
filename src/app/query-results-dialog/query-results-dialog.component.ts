@@ -1,9 +1,17 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Chart } from 'chart.js';
 
 interface Card {
   id: number;
@@ -16,18 +24,23 @@ interface Card {
 @Component({
   selector: 'app-query-results-dialog',
   templateUrl: './query-results-dialog.component.html',
-  styleUrls: ['./query-results-dialog.component.css']
+  styleUrls: ['./query-results-dialog.component.css'],
 })
-export class QueryResultsDialogComponent implements OnInit {
+export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('chart') chartRef!: ElementRef<HTMLCanvasElement>;
+  chart!: Chart;
+
   dataSource = new MatTableDataSource<any>();
   pageRange: [number, number] = [1, 1];
   isLoading = false;
-
-  // Add new properties for pagination
   currentPage = 0;
   pageSize = 30000;
+
+  // Properties for the line chart
+  selectedXColumn = '';
+  selectedYColumn = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { card: Card },
@@ -35,7 +48,6 @@ export class QueryResultsDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Load the first chunk of query results
     this.loadQueryResults();
     const rows = document.querySelectorAll('.mat-row');
     rows.forEach((row, index) => {
@@ -43,81 +55,72 @@ export class QueryResultsDialogComponent implements OnInit {
         (row as HTMLElement).style.backgroundColor = '#f5f5f5';
       }
     });
+    // Set the initial values for the selected columns
+    this.selectedXColumn = this.data.card.selectedColumns[0];
+    this.selectedYColumn = this.data.card.selectedColumns[1];
+  }
+
+  ngAfterViewInit() {
+    this.createChart();
+    this.updateChartData();
+    this.paginator.page.subscribe(() => {
+      if (this.paginator.pageIndex === this.paginator.getNumberOfPages() - 1) {
+        this.loadQueryResults();
+      }
+    });
   }
 
   loadQueryResults() {
-    // Set isLoading to true while data is loading
     this.isLoading = true;
-    // Get the query and server location from the selected card
     const query = this.data.card.query;
     const serverLocation = this.data.card.serverLocation;
-
-    // Send a request to the server to execute the query and return the results
     this.http
       .get<any[]>('http://localhost:3000/query-results', {
         params: {
           query,
           serverLocation,
-          // Add new parameters for pagination
           currentPage: this.currentPage.toString(),
           pageSize: this.pageSize.toString(),
         },
       })
       .subscribe((data) => {
-        // Update the data source with the query results
         this.dataSource.data = [...this.dataSource.data, ...data];
-
-        // Set the paginator and sort on the data source
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        // Set isLoading to false when data has finished loading
         this.isLoading = false;
-
-        // Increment the current page
         this.currentPage++;
+        // Update the chart data
+        this.updateChartData();
       });
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    // Update the chart data
+    this.updateChartData();
   }
 
   print() {
-    // Get start and end indices of rows to print.
     const pageSize = this.paginator.pageSize;
     const startIndex = (this.pageRange[0] - 1) * pageSize;
     const endIndex = this.pageRange[1] * pageSize;
-
-    // Filter data source to only include rows on specified pages.
     const dataToPrint = this.dataSource.filteredData.slice(startIndex, endIndex);
-
-    // Create a new window.
     const printWindow = window.open('', '_blank');
-
-    // Write table's HTML to new window's document.
     const tableHtml = this.generateTableHtml(dataToPrint);
     printWindow!.document.write(tableHtml);
-
-    // Open print dialog.
     printWindow!.focus();
     printWindow!.print();
-
-    // Close new window.
     printWindow!.close();
   }
 
   generateTableHtml(data: any[]) {
     let html = '<table>';
-
-    // Add table header
     html += '<thead><tr>';
     for (const column of this.data.card.selectedColumns) {
       html += `<th>${column}</th>`;
     }
     html += '</tr></thead>';
-
-    // Add table body
     html += '<tbody>';
     for (const row of data) {
       html += '<tr>';
@@ -127,20 +130,45 @@ export class QueryResultsDialogComponent implements OnInit {
       html += '</tr>';
     }
     html += '</tbody>';
-
     html += '</table>';
     return html;
   }
-  ngAfterViewInit() {
-    // Add a page event listener to the paginator
-    this.paginator.page.subscribe(() => {
-      // Check if the user has reached the last page
-      if (this.paginator.pageIndex === this.paginator.getNumberOfPages() - 1) {
-        // Load the next chunk of data
-        this.loadQueryResults();
-      }
-    });
+
+  // Method to create the chart
+  createChart() {
+    const ctx = this.chartRef.nativeElement.getContext('2d');
+    if (ctx) {
+      this.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: this.selectedYColumn,
+              data: [],
+              borderColor: 'black',
+              backgroundColor: 'rgba(255,255,0,0.28)',
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+        },
+      });
+    }
   }
 
-
+  // Method to update the chart data
+  updateChartData() {
+    const xColumnData = this.dataSource.filteredData.map(
+      (row) => row[this.selectedXColumn]
+    );
+    const yColumnData = this.dataSource.filteredData.map(
+      (row) => row[this.selectedYColumn]
+    );
+    this.chart.data.labels = xColumnData;
+    this.chart.data.datasets[0].data = yColumnData;
+    this.chart.data.datasets[0].label = this.selectedYColumn;
+    this.chart.update();
+  }
 }
