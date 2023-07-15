@@ -27,28 +27,45 @@
       [max]="paginator.getNumberOfPages()"
     />
   </mat-form-field>
-  <div style="text-align: center; margin-bottom: 10px">
-    <button mat-raised-button (click)="print()" [ngStyle]="{ 'background-color': 'lightgrey' }">
-      Print
-    </button>
-      </div>
+
   <div fxLayout="row">
     <mat-form-field>
       <mat-label>X Axis</mat-label>
-      <mat-select [(ngModel)]="selectedXColumn" (selectionChange)="updateChartData()">
-        <mat-option *ngFor="let column of data.card.selectedColumns" [value]="column">
+      <mat-select
+        [(ngModel)]="selectedXColumn"
+        (selectionChange)="updateChartData()"
+      >
+        <mat-option
+          *ngFor="let column of data.card.selectedColumns"
+          [value]="column"
+        >
           {{ column }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Y Axis</mat-label>
-      <mat-select [(ngModel)]="selectedYColumn" (selectionChange)="updateChartData()">
-        <mat-option *ngFor="let column of data.card.selectedColumns" [value]="column">
+      <mat-select
+        [(ngModel)]="selectedYColumn"
+        (selectionChange)="updateChartData()"
+      >
+        <mat-option
+          *ngFor="let column of data.card.selectedColumns"
+          [value]="column"
+        >
           {{ column }}
         </mat-option>
       </mat-select>
     </mat-form-field>
+  </div>
+  <div style="text-align: center; margin-bottom: 10px">
+    <button
+      mat-raised-button
+      (click)="print()"
+      [ngStyle]="{ 'background-color': 'lightgrey' }"
+    >
+      Print
+    </button>
   </div>
   <canvas #chart></canvas>
   <table mat-table [dataSource]="dataSource" matSort>
@@ -67,11 +84,7 @@
     ></tr>
     <tr
       mat-row
-      *matRowDef="
-        let row;
-        columns: data.card.selectedColumns;
-        let i = index
-      "
+      *matRowDef="let row; columns: data.card.selectedColumns; let i = index"
       [ngClass]="{ 'striped-row': i % 2 === 1 }"
     ></tr>
   </table>

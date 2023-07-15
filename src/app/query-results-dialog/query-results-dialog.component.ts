@@ -28,7 +28,7 @@ export class QueryResultsDialogComponent implements OnInit, AfterViewInit {
   pageRange: [number, number] = [1, 1];
   isLoading = false;
   currentPage = 0;
-  pageSize = 30000;
+  pageSize = 5000;
   selectedXColumn = '';
   selectedYColumn = '';
 
